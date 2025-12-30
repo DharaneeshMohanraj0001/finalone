@@ -15,8 +15,8 @@ router.post("/contact", async (req, res) => {
       });
     }
 
-    // 1️⃣ Save to MongoDB
-    await Message.create({
+    // 1️⃣ SAVE TO MONGODB (CRITICAL)
+    const savedMessage = await Message.create({
       name,
       email,
       mobile,
@@ -24,16 +24,24 @@ router.post("/contact", async (req, res) => {
       message,
     });
 
-    // 2️⃣ Send email to your Gmail
-    await sendEmail({ name, email, mobile, subject, message });
+    console.log("✅ Message saved to MongoDB:", savedMessage._id);
 
-    // 3️⃣ Respond to frontend
+    // 2️⃣ RESPOND TO FRONTEND IMMEDIATELY
     res.status(201).json({
       success: true,
-      message: "Message saved & email sent 🚀",
+      message: "Message saved successfully ✅",
     });
+
+    // 3️⃣ SEND EMAIL (NON-BLOCKING)
+    try {
+      await sendEmail({ name, email, mobile, subject, message });
+      console.log("📧 Email sent successfully");
+    } catch (emailErr) {
+      console.error("❌ Email failed:", emailErr.message);
+    }
+
   } catch (error) {
-    console.error(error);
+    console.error("❌ Contact API error:", error.message);
     res.status(500).json({
       success: false,
       message: "Server error",
@@ -42,4 +50,3 @@ router.post("/contact", async (req, res) => {
 });
 
 module.exports = router;
-
