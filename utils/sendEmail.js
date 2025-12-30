@@ -1,34 +1,23 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const sendEmail = async (data) => {
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-    const mailOptions = {
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
-      subject: "📩 New Contact Message from Portfolio",
-      html: `
-        <h3>New Contact Message</h3>
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Mobile:</strong> ${data.mobile}</p>
-        <p><strong>Subject:</strong> ${data.subject}</p>
-        <p><strong>Message:</strong><br/>${data.message}</p>
-      `,
-    };
-
-    await transporter.sendMail(mailOptions);
-    console.log("📧 Email sent successfully");
-  } catch (error) {
-    console.error("❌ Email sending failed:", error.message);
-  }
+const sendEmail = async ({ name, email, mobile, subject, message }) => {
+  await resend.emails.send({
+    from: "Portfolio <onboarding@resend.dev>",
+    to: ["dharaneeshm2023@gmail.com"],
+    subject: "New Portfolio Contact Message",
+    html: `
+      <h3>New Message</h3>
+      <p><b>Name:</b> ${name}</p>
+      <p><b>Email:</b> ${email}</p>
+      <p><b>Mobile:</b> ${mobile}</p>
+      <p><b>Subject:</b> ${subject}</p>
+      <p><b>Message:</b> ${message}</p>
+    `,
+  });
 };
 
 module.exports = sendEmail;
+
+
