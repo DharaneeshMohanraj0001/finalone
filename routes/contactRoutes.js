@@ -8,6 +8,7 @@ router.post("/contact", async (req, res) => {
   try {
     const { name, email, mobile, subject, message } = req.body;
 
+    // 1️⃣ Validate input
     if (!name || !email || !mobile || !subject || !message) {
       return res.status(400).json({
         success: false,
@@ -15,7 +16,7 @@ router.post("/contact", async (req, res) => {
       });
     }
 
-    // 1️⃣ SAVE TO MONGODB (CRITICAL)
+    // 2️⃣ SAVE TO MONGODB (MOST IMPORTANT)
     const savedMessage = await Message.create({
       name,
       email,
@@ -24,21 +25,26 @@ router.post("/contact", async (req, res) => {
       message,
     });
 
-    console.log("✅ Message saved to MongoDB:", savedMessage._id);
+    // 3️⃣ TRY TO SEND EMAIL (OPTIONAL – SHOULD NOT BREAK APP)
+    try {
+      await sendEmail({
+        name,
+        email,
+        mobile,
+        subject,
+        message,
+      });
+    } catch (emailError) {
+      console.error("❌ Email sending failed:", emailError.message);
+      // ❗ DO NOT return error here
+    }
 
-    // 2️⃣ RESPOND TO FRONTEND IMMEDIATELY
+    // 4️⃣ ALWAYS RESPOND SUCCESS TO FRONTEND
     res.status(201).json({
       success: true,
       message: "Message saved successfully ✅",
+      data: savedMessage,
     });
-
-    // 3️⃣ SEND EMAIL (NON-BLOCKING)
-    try {
-      await sendEmail({ name, email, mobile, subject, message });
-      console.log("📧 Email sent successfully");
-    } catch (emailErr) {
-      console.error("❌ Email failed:", emailErr.message);
-    }
 
   } catch (error) {
     console.error("❌ Contact API error:", error.message);
