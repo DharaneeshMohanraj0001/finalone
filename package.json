@@ -1,0 +1,16 @@
+{
+  "name": "portfolio-backend",
+  "version": "1.0.0",
+  "description": "Backend for portfolio website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.19.2",
+    "mongoose": "^8.0.0",
+    "nodemailer": "^7.0.12"
+  }
+}
