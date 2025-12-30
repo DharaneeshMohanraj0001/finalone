@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Message = require("../models/Message");
+const Message = require("../models/message");
 const sendEmail = require("../utils/sendEmail");
 
 // POST /api/contact
@@ -42,3 +42,4 @@ router.post("/contact", async (req, res) => {
 });
 
 module.exports = router;
+
