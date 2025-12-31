@@ -9,7 +9,7 @@ const connectDB = require("./config/db.js");
 
 const contactRoutes = require("./routes/contactRoutes.js");
 
-const messageRoutes = require("./routes/messageRoutes.js");
+const messageRoutes = require("./routes/messageRouters.js");
 
 
 const app = express();
@@ -37,6 +37,7 @@ app.get("/", (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
