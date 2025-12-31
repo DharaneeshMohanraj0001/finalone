@@ -9,7 +9,6 @@ const connectDB = require("./config/db.js");
 
 const contactRoutes = require("./routes/contactRoutes.js");
 
-const messageRoutes = require("./routes/messageRouters.js");
 
 
 const app = express();
@@ -25,7 +24,6 @@ app.use(express.json());
 
 // routes
 app.use("/api", contactRoutes);
-app.use("/api", messageRoutes);
 
 
 app.get("/", (req, res) => {
@@ -37,6 +35,7 @@ app.get("/", (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
